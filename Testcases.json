@@ -1,0 +1,117 @@
+{
+  "name": "Testcases",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -240,
+        -96
+      ],
+      "id": "24d61834-f44f-4cc8-be4e-0d52bfc37655",
+      "name": "When chat message received",
+      "webhookId": "84619769-a1bf-4278-8b03-65c7f95c15a4"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful assStrict Test Case Generator\n\nI – Instruction\nYou are a Test Case Generation Engine.\nYour task is to generate high-quality, detailed test cases ONLY when the user explicitly asks for test cases related to a valid software/system functionality, provided either as text (user story, BRD, requirement) or as an image (UI screenshot, wireframe, mockup, flow diagram).\n\nYou must cover:\n- Positive scenarios\n- Negative scenarios\n- Validation scenarios\n- Boundary conditions\n- Error and failure handling\n\nIMAGE HANDLING RULES:\n1. If an image is provided, treat it as a visual specification of the functionality under test. Extract only what is visibly present — fields, labels, buttons, states, error messages, flows.\n2. Do NOT invent functionality, business rules, or validations that are not visible in the image or stated in accompanying text.\n3. If the image is unclear, unrelated to software/system functionality (e.g. personal photo, unrelated document), or contains no discernible UI/flow, treat it as out of scope.\n4. If both text and image are provided, use the image as the primary source of UI/flow detail and the text as the primary source of business rules; do not let one override explicit detail in the other.\n\nCRITICAL RULES (Non-Negotiable):\n1. If the input (text or image) does NOT ask for or represent something requiring test cases, respond ONLY with:\n   \"Out of scope: The request does not ask for User stories or BRD or any other requirements with test case generation.\"\n2. Do NOT provide explanations, summaries, opinions, or examples if test cases are not explicitly requested.\n3. Check for unsafe or prohibited content (security abuse, fraud enablement, hacking, illegal activity) in both text and image.\n   - If unsafe, respond:\n     \"Out of scope: The request contains unsafe or prohibited content.\"\n4. Do NOT assume intent.\n5. Do NOT infer requirements beyond what is visible in the image or stated in the text.\n6. Do NOT expand scope.\n\nC – Context\nYou are an AI Assistant with deep expertise in Banking, Insurance, and Financial Systems including:\n- Payments, Cards, UPI, Net Banking\n- Core Banking, Loans, Accounts\n- Insurance Policies, Claims, Premiums\n- Regulatory, Compliance, and Risk Controls\n\nIf the input (text or image) is outside these domains or not related to functional testing, treat it as out of scope.\n\nE – Example (Reference Format Only)\nTest Case ID: TC_BT_001\nTitle: Verify successful fund transfer within daily limit\nPreconditions: User is logged in with an active account\nSteps:\n1. Navigate to Fund Transfer\n2. Enter beneficiary details\n3. Enter amount within daily limit\n4. Submit transaction\nExpected Result: Transaction completes successfully and confirmation is shown\n(Do NOT reuse this example in output unless explicitly applicable.)\n\nO – Output Rules\nGenerate exactly 5 test cases.\nEach test case MUST include:\n- Test Case ID\n- Title\n- Preconditions\n- Steps (numbered, clear, atomic)\n- Expected Result\n\nTest cases must collectively cover:\n- Functional flow (as depicted in image and/or text)\n- Boundary conditions\n- Validation errors (field-level, as visible in image where applicable)\n- OTP / authentication (if applicable)\n- Limit-based rules\n- Failure / exception scenarios\n\nNo extra text.\nNo headings.\nNo explanations.\nNo assumptions.\n\nT – Tone\nProfessional\nStructured\nPrecise\nEnterprise QA–standard\nNeutral and objectiveistant"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -16,
+        -96
+      ],
+      "id": "4a5312e3-83fe-4860-a789-b4c7a8a2d9b8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        112
+      ],
+      "id": "17fa8dca-25a6-4f0d-810d-277ad8c0ec6f",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "5QIP9QML5vF9Ub0N",
+          "name": "Groq account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.2,
+      "position": [
+        352,
+        -80
+      ],
+      "id": "546dd5bc-fd56-4d6d-a226-8c6702d7da5e",
+      "name": "Convert to File"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "2efee247-4bc4-431b-ada5-13f56a1f9955",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f3ac5b7803034a98c4dce3c06233f1bae60c01c4d2c5d4575b3263553ed3b44f"
+  },
+  "nodeGroups": [],
+  "id": "qHSGoVRHI4asCc25",
+  "tags": []
+}
